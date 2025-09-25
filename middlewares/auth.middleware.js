@@ -22,25 +22,21 @@ const authenticate = async (req, res, next) => {
     req.user = { id: user._id, role: user.role };
     next();
   } catch (err) {
-    return res
-      .status(401)
-      .json({
-        success: false,
-        message: "Invalid or expired token",
-        error: err.message,
-      });
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+      error: err.message,
+    });
   }
 };
 
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Forbidden: insufficient permissions",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: insufficient permissions",
+      });
     }
     next();
   };
