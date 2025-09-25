@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/user.model");
+const User = require("../models/user.model.js");
 
 class AuthController {
   static signToken(user) {
@@ -20,12 +20,10 @@ class AuthController {
           .json({ success: false, message: "All fields are required" });
       }
       if (password.length < 6) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: "Password must be at least 6 characters",
-          });
+        return res.status(400).json({
+          success: false,
+          message: "Password must be at least 6 characters",
+        });
       }
       const existing = await User.findOne({ email });
       if (existing) {

@@ -1,4 +1,4 @@
-const Complaint = require("../models/complaint.model");
+const Complaint = require("../models/complaint.model.js");
 const cloudinary = require("../configs/cloudinary");
 
 class ComplaintController {
