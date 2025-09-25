@@ -11,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/health", () => console.log("hello"));
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 
