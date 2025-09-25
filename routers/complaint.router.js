@@ -48,7 +48,7 @@ router.get(
   authorize("admin"),
   ComplaintController.adminGetComplaint
 );
-router.put(
+router.patch(
   "/:id/status",
   authenticate,
   authorize("admin"),

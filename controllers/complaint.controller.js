@@ -67,29 +67,45 @@ class ComplaintController {
   static async adminUpdateStatus(req, res) {
     try {
       const { id } = req.params;
-      const { status, isLegitimate } = req.body;
-      const complaint = await Complaint.findById(id);
-      if (!complaint) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Complaint not found" });
+      const { isLegitimate } = req.body;
+
+      if (typeof isLegitimate !== "boolean") {
+        return res.status(400).json({
+          success: false,
+          message: "isLegitimate must be a boolean",
+        });
       }
-      if (status) complaint.status = status;
-      if (typeof isLegitimate === "boolean") {
-        complaint.isLegitimate = isLegitimate;
-        complaint.reviewedBy = req.user.id;
-        complaint.reviewedAt = new Date();
+
+      const updatedComplaint = await Complaint.findByIdAndUpdate(
+        id,
+        {
+          isLegitimate: isLegitimate,
+          reviewedBy: req.user.id,
+          reviewedAt: new Date(),
+        },
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedComplaint) {
+        return res.status(404).json({
+          success: false,
+          message: "Complaint not found",
+        });
       }
-      await complaint.save();
+
+      console.log("Updated complaint:", updatedComplaint);
+
       return res.json({
         success: true,
         message: "Complaint updated",
-        complaint,
+        complaint: updatedComplaint,
       });
     } catch (err) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Server error", error: err.message });
+      return res.status(500).json({
+        success: false,
+        message: "Server error",
+        error: err.message,
+      });
     }
   }
 
